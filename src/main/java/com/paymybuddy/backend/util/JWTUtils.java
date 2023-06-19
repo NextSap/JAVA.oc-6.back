@@ -3,6 +3,7 @@ package com.paymybuddy.backend.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.paymybuddy.backend.exception.JWTException;
+import com.paymybuddy.backend.exception.UserException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +28,6 @@ public class JWTUtils {
         logger.debug("Returning JWT token: {}", jwtToken);
         return jwtToken;
         } catch (Exception e) {
-            logger.error("Error returning JWT token: {}", e.getMessage());
             throw new JWTException.CreatingTokenException(e.getMessage());
         }
     }
@@ -41,8 +41,7 @@ public class JWTUtils {
             logger.debug("Returning email: {}", email);
             return email;
         } catch (Exception e) {
-            logger.error("Error returning email: {}", e.getMessage());
-            throw new JWTException.VerifyingTokenException(e.getMessage());
+            throw new UserException.BadCredentialsException(e.getMessage());
         }
     }
 

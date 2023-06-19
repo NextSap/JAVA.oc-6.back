@@ -1,4 +1,4 @@
-package com.paymybuddy.backend.object;
+package com.paymybuddy.backend.object.response;
 
 import lombok.Builder;
 import lombok.Data;
