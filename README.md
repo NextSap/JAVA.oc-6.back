@@ -1,1 +1,2 @@
-# JAVA.oc-6.back
+# PayMyBuddy
+PayMyBuddy est une application web de transfert d'argent.
