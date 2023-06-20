@@ -1,16 +1,18 @@
 package com.paymybuddy.backend.object.entity;
 
+import com.paymybuddy.backend.object.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
+@ToString
 public class TransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,5 +22,6 @@ public class TransactionEntity {
     private String description;
     private BigDecimal amount;
     private BigDecimal fees;
-    private Date date;
+    private Long timestamp;
+    private TransactionType transactionType;
 }

@@ -20,6 +20,13 @@ public class UserException {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(EmailAlreadyUsedException.class)
+    public ResponseEntity<ErrorResponse> handleException(EmailAlreadyUsedException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder().field("User").cause(exception.getMessage()).build();
+        logger.error("Email already used: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleException(BadCredentialsException exception) {
         ErrorResponse errorResponse = ErrorResponse.builder().field("User").cause(exception.getMessage()).build();
@@ -28,6 +35,12 @@ public class UserException {
 
     public static class UserNotFoundException extends RuntimeException {
         public UserNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+    public static class EmailAlreadyUsedException extends RuntimeException {
+        public EmailAlreadyUsedException(String message) {
             super(message);
         }
     }

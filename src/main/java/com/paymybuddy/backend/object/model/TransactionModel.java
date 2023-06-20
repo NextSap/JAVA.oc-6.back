@@ -1,18 +1,22 @@
 package com.paymybuddy.backend.object.model;
 
+import com.paymybuddy.backend.object.TransactionType;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @Builder
+@EqualsAndHashCode
+@ToString
 public class TransactionModel {
     private String sender;
     private String receiver;
     private String description;
     private BigDecimal amount;
-    private BigDecimal fees;
-    private Date date;
+    private Long timestamp;
+    private TransactionType transactionType;
 }

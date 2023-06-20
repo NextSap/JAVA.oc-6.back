@@ -18,17 +18,17 @@ public class JWTUtils {
         algorithm = Algorithm.HMAC256("secret");
     }
 
-    public String get(String email) {
+    public String get(String email, boolean rememberMe) {
         try {
         logger.debug("Entering getJWTToken with email: {}", email);
 
         String jwtToken = JWT.create().withSubject(email).withIssuedAt(new Date())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 864000000)).sign(algorithm);
+                    .withExpiresAt(new Date(System.currentTimeMillis() + (rememberMe ? 864000000 : 7200000))).sign(algorithm);
 
         logger.debug("Returning JWT token: {}", jwtToken);
         return jwtToken;
         } catch (Exception e) {
-            throw new JWTException.CreatingTokenException(e.getMessage());
+            throw new JWTException.CreatingTokenException("Error creating JWT token");
         }
     }
 
@@ -36,12 +36,12 @@ public class JWTUtils {
         try {
             logger.debug("Entering verifyJWTToken with token: {}", token);
 
-            String email = JWT.require(algorithm).build().verify(token).getSubject();
+            String email = JWT.require(algorithm).build().verify(token.replace("Bearer ", "")).getSubject();
 
             logger.debug("Returning email: {}", email);
             return email;
         } catch (Exception e) {
-            throw new UserException.BadCredentialsException(e.getMessage());
+            throw new UserException.BadCredentialsException("Bad credentials");
         }
     }
 

@@ -9,7 +9,6 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 @ToString
-public class ErrorResponse {
-    private String field;
-    private String cause;
+public class AuthResponse {
+    private String token;
 }

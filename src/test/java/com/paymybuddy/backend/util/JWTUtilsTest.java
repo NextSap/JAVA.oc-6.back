@@ -14,14 +14,14 @@ public class JWTUtilsTest {
 
     @Test
     public void getTokenTest() {
-       String token = jwt.get(email);
+       String token = jwt.get(email, false);
 
        assertNotNull(token);
     }
 
     @Test
     public void verifyTokenTest() {
-        String token = jwt.get(email);
+        String token = jwt.get(email, false);
 
         String email = jwt.verify(token);
 
