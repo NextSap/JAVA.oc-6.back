@@ -14,7 +14,6 @@ import java.util.List;
 @ToString
 public class UserResponse {
     private String email;
-    private String password;
     private String firstName;
     private String lastName;
     private List<String> contacts;
