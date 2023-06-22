@@ -34,6 +34,13 @@ public class TransactionException {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(TransactionInvalidPagingException.class)
+    public ResponseEntity<ErrorResponse> handleException(TransactionInvalidPagingException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder().field("Transaction").cause(exception.getMessage()).build();
+        logger.error("Transaction invalid paging: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     public static class TransactionNotFoundException extends RuntimeException {
         public TransactionNotFoundException(String message) {
             super(message);
@@ -48,6 +55,12 @@ public class TransactionException {
 
     public static class TransactionInvalidTypeException extends RuntimeException {
         public TransactionInvalidTypeException(String message) {
+            super(message);
+        }
+    }
+
+    public static class TransactionInvalidPagingException extends RuntimeException {
+        public TransactionInvalidPagingException(String message) {
             super(message);
         }
     }

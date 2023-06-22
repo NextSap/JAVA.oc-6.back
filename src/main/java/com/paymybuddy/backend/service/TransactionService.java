@@ -30,7 +30,10 @@ public class TransactionService {
     public List<TransactionResponse> getTransactions(int page, int size, String token, TransactionType filter) {
         String email = jwtUtils.verify(token);
 
-        List<TransactionEntity> transactionEntityList = transactionRepository.findAll(Pageable.ofSize(size).withPage(page)).stream().filter(transactionEntity -> (transactionEntity.getSender().equals(email) || transactionEntity.getReceiver().equals(email)) && transactionEntity.getTransactionType().equals(TransactionType.valueOf(filter.name()))).toList();
+        if(page <= 0 || size <= 0)
+            throw new TransactionException.TransactionInvalidPagingException("Page and size must be greater than 0");
+
+        List<TransactionEntity> transactionEntityList = transactionRepository.findAll(Pageable.ofSize(size).withPage(page-1)).stream().filter(transactionEntity -> (transactionEntity.getSender().equals(email) || transactionEntity.getReceiver().equals(email)) && transactionEntity.getTransactionType().equals(TransactionType.valueOf(filter.name()))).toList();
 
         if (transactionEntityList.isEmpty())
             throw new TransactionException.TransactionNotFoundException("No transaction found for user `" + email + "`");
