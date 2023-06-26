@@ -1,14 +1,20 @@
 package com.paymybuddy.backend.mapper;
 
 import com.paymybuddy.backend.object.entity.UserEntity;
-import com.paymybuddy.backend.object.request.UserRequest;
+import com.paymybuddy.backend.object.request.SigninRequest;
 import com.paymybuddy.backend.object.response.UserResponse;
-import com.paymybuddy.backend.util.CredentialUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class UserMapper {
 
     private static final UserMapper INSTANCE = new UserMapper();
-    private final CredentialUtils credentialUtils = CredentialUtils.getInstance();
+
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     private UserMapper() {
     }
@@ -23,14 +29,15 @@ public class UserMapper {
                 .build();
     }
 
-    public UserEntity toUserEntity(UserRequest userRequest, boolean hashPassword) {
+    public UserEntity toUserEntity(SigninRequest signinRequest, boolean hashPassword) {
+        String password = signinRequest.getPassword();
         return UserEntity.builder()
-                .email(userRequest.getEmail())
-                .password(hashPassword ? credentialUtils.hash(userRequest.getPassword()) : userRequest.getPassword())
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .contacts(userRequest.getContacts())
-                .balance(userRequest.getBalance())
+                .email(signinRequest.getEmail())
+                .password(hashPassword ? bCryptPasswordEncoder().encode(password) : password)
+                .firstName(signinRequest.getFirstName())
+                .lastName(signinRequest.getLastName())
+                .contacts(new ArrayList<>())
+                .balance(BigDecimal.valueOf(0.0))
                 .build();
     }
 

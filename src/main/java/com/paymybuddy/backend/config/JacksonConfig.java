@@ -36,18 +36,20 @@ public class JacksonConfig implements ApplicationRunner {
     @Value("classpath:data.json")
     private Resource data;
 
-    @Value("${env}")
-    private String env;
+    @Value("${feedDatabase}")
+    private boolean feedDatabase;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if(!env.equals("test")) return;
+        if(!feedDatabase) return;
+        logger.info("Feeding database");
 
         Models models = objectMapper.readValue(data.getInputStream(), Models.class);
 
         Entities entities = map(models);
 
         transactionRepository.saveAll(entities.getTransactions());
+        logger.info("Database feeded");
     }
 
     public Entities map(Models models) {

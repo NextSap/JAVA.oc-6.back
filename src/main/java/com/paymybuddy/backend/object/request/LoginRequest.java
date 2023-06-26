@@ -11,11 +11,10 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 @ToString
-public class AuthRequest {
+public class LoginRequest {
     @NotNull(message = "email:Null") @NotBlank(message = "email:Required")
     private String email;
     @NotNull(message = "password:Null") @NotBlank(message = "password:Required")
     private String password;
-    @NotBlank(message = "rememberMe:Required")
     private boolean rememberMe;
 }

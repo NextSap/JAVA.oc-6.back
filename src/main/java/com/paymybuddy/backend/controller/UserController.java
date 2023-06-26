@@ -24,29 +24,22 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> getUser(@RequestParam String email, @RequestHeader(value = "Authorization", required = false) String token) {
-        UserResponse userResponse = userService.getUser(email, token);
-        logger.info("Successful request GET /user?email={}", email);
+    public ResponseEntity<UserResponse> getUser(@RequestHeader("Authorization") String token) {
+        UserResponse userResponse = userService.getUserResponseByToken();
+        logger.info("Successful request GET /user?email={}", userResponse.getEmail());
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
-        UserResponse userResponse = userService.createUser(userRequest);
-        logger.info("Successful request POST /user");
-        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
-    }
-
     @PutMapping
-    public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserRequest userRequest, @RequestHeader(value = "Authorization", required = false) String token) {
-        UserResponse userResponse = userService.updateUser(userRequest, token);
+    public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserRequest userRequest, @RequestHeader("Authorization") String token) {
+        UserResponse userResponse = userService.updateUser(userRequest);
         logger.info("Successful request PUT /user");
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @DeleteMapping
-    public void deleteUser(@RequestHeader(value = "Authorization", required = false) String token) {
-        userService.deleteUser(token);
+    public void deleteUser(@RequestHeader("Authorization") String token) {
+        userService.deleteUser();
         logger.info("Successful request DELETE /user");
     }
 }

@@ -9,6 +9,6 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 @ToString
-public class AuthResponse {
+public class LoginResponse {
     private String token;
 }

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class JWTUtilsTest {
 
-    private final JWTUtils jwt = JWTUtils.getInstance();
+    private final JwtUtils jwt = JwtUtils.getInstance();
     private final String email = "test@test.com";
 
     @Test
@@ -23,13 +23,13 @@ public class JWTUtilsTest {
     public void verifyTokenTest() {
         String token = jwt.get(email, false);
 
-        String email = jwt.verify(token);
+        String email = jwt.getEmail(token, true);
 
         assertNotNull(email);
         assertEquals(this.email, email);
 
         String anotherToken = "eofkzeofk";
 
-        assertThrows(UserException.BadCredentialsException.class , () -> jwt.verify(anotherToken));
+        assertThrows(UserException.BadCredentialsException.class , () -> jwt.getEmail(anotherToken, true));
     }
 }

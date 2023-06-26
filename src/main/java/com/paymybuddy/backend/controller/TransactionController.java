@@ -27,15 +27,15 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> getTransactions(@RequestParam int page, @RequestParam int size, @RequestParam TransactionType filter, @RequestHeader(value = "Authorization", required = false) String token) {
-        List<TransactionResponse> transactionResponseList = transactionService.getTransactions(page, size, token, filter);
+    public ResponseEntity<List<TransactionResponse>> getTransactions(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) TransactionType filter, @RequestHeader("Authorization") String token) {
+        List<TransactionResponse> transactionResponseList = transactionService.getTransactions(page, size, filter);
         logger.info("Successful request GET /transaction?page={}&size={}&filter={}", page, size, filter);
         return new ResponseEntity<>(transactionResponseList, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<TransactionResponse> postTransaction(@RequestParam TransactionType type, @Valid @RequestBody TransactionRequest transactionRequest, @RequestHeader(value = "Authorization", required = false) String token) {
-        TransactionResponse transactionResponse = transactionService.createTransaction(transactionRequest, type, token);
+    public ResponseEntity<TransactionResponse> postTransaction(@RequestParam TransactionType type, @Valid @RequestBody TransactionRequest transactionRequest, @RequestHeader("Authorization") String token) {
+        TransactionResponse transactionResponse = transactionService.createTransaction(transactionRequest, type);
         logger.info("Successful request POST /transaction");
         return new ResponseEntity<>(transactionResponse, HttpStatus.CREATED);
     }

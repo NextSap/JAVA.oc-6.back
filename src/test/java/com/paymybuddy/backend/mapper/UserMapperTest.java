@@ -1,6 +1,7 @@
 package com.paymybuddy.backend.mapper;
 
 import com.paymybuddy.backend.object.entity.UserEntity;
+import com.paymybuddy.backend.object.request.SigninRequest;
 import com.paymybuddy.backend.object.request.UserRequest;
 import com.paymybuddy.backend.object.response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,16 +26,16 @@ public class UserMapperTest {
         userEntity = UserEntity.builder()
                 .email("email")
                 .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
+                .firstName("Foo")
+                .lastName("Bar")
                 .contacts(new ArrayList<>())
                 .balance(BigDecimal.valueOf(0.0))
                 .build();
 
         userResponse = UserResponse.builder()
                 .email("email")
-                .firstName("firstName")
-                .lastName("lastName")
+                .firstName("Foo")
+                .lastName("Bar")
                 .contacts(new ArrayList<>())
                 .balance(BigDecimal.valueOf(0.0))
                 .build();
@@ -42,10 +43,10 @@ public class UserMapperTest {
         userRequest = UserRequest.builder()
                 .email("email")
                 .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
+                .firstName("Foo")
+                .lastName("Bar")
                 .contacts(new ArrayList<>())
-                .balance(BigDecimal.valueOf(0.0))
+                .balance(0.0)
                 .build();
     }
 
@@ -56,6 +57,6 @@ public class UserMapperTest {
 
     @Test
     public void testToUserEntity() {
-        assertEquals(userEntity, userMapper.toUserEntity(userRequest, false));
+        assertEquals(userEntity, userMapper.toUserEntity(SigninRequest.builder().email("email").password("password").firstName("Foo").lastName("Bar").build(), false));
     }
 }

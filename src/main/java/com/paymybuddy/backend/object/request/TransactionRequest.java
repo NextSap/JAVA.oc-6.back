@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-
 @Data
 @Builder
 @EqualsAndHashCode
@@ -20,6 +18,6 @@ public class TransactionRequest {
     private String receiver;
     @NotNull(message = "description:Null") @NotBlank(message = "description:Required")
     private String description;
-    @NotNull(message = "amount:Null") @NotBlank(message = "amount:Required")
-    private BigDecimal amount;
+    @NotNull(message = "amount:Null")
+    private Double amount;
 }

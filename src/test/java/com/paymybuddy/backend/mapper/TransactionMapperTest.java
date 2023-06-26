@@ -22,7 +22,7 @@ public class TransactionMapperTest {
     private TransactionEntity transactionEntity;
     private TransactionResponse transactionResponse;
     private TransactionRequest transactionRequest;
-    
+
     @BeforeEach
     public void setUp() {
 
@@ -47,7 +47,7 @@ public class TransactionMapperTest {
                 .build();
         
         transactionRequest = TransactionRequest.builder()
-                .amount(BigDecimal.valueOf(1.0))
+                .amount(1.0)
                 .sender("sender")
                 .receiver("receiver")
                 .description("description")

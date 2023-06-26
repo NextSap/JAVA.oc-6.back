@@ -1,7 +1,9 @@
 package com.paymybuddy.backend.controller;
 
-import com.paymybuddy.backend.object.request.AuthRequest;
-import com.paymybuddy.backend.object.response.AuthResponse;
+import com.paymybuddy.backend.object.request.LoginRequest;
+import com.paymybuddy.backend.object.request.SigninRequest;
+import com.paymybuddy.backend.object.response.LoginResponse;
+import com.paymybuddy.backend.object.response.UserResponse;
 import com.paymybuddy.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -19,17 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final Logger logger = LogManager.getLogger(AuthController.class);
+
     private final UserService userService;
+
 
     @Autowired
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
-        AuthResponse authResponse = userService.login(authRequest.getEmail(), authRequest.getPassword(), authRequest.isRememberMe());
-        logger.info("Successful request POST /auth");
-        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = userService.login(loginRequest);
+        logger.info("User `" + loginRequest.getEmail() + "` logged in");
+        return new ResponseEntity<>(loginResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@Valid @RequestBody SigninRequest signinRequest) {
+        UserResponse userResponse = userService.createUser(signinRequest);
+        logger.info("User `" + signinRequest.getEmail() + "` created");
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 }
