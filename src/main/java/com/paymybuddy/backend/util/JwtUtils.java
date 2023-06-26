@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.Instant;
 import java.util.Date;
 
 public class JwtUtils {
@@ -24,7 +25,7 @@ public class JwtUtils {
             logger.debug("Entering getJWTToken with email: {}", email);
 
             String jwtToken = JWT.create().withSubject(email).withIssuedAt(new Date())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + (rememberMe ? 864000000 : 7200000))).sign(algorithm);
+                    .withExpiresAt(Instant.ofEpochSecond(new Date().getTime() + (rememberMe ? 864000000 : 7200000))).sign(algorithm);
 
             logger.debug("Returning JWT token: {}", jwtToken);
             return jwtToken;

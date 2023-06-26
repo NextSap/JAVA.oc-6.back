@@ -18,6 +18,7 @@ public class TransactionMapper {
 
     public TransactionResponse toTransactionResponse(TransactionEntity transactionEntity) {
         return TransactionResponse.builder()
+                .id(transactionEntity.getId())
                 .sender(transactionEntity.getSender())
                 .receiver(transactionEntity.getReceiver())
                 .amount(transactionEntity.getAmount())

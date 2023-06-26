@@ -1,6 +1,7 @@
 package com.paymybuddy.backend.service;
 
 import com.paymybuddy.backend.exception.TransactionException;
+import com.paymybuddy.backend.exception.UserException;
 import com.paymybuddy.backend.mapper.TransactionMapper;
 import com.paymybuddy.backend.object.TransactionType;
 import com.paymybuddy.backend.object.entity.TransactionEntity;
@@ -28,6 +29,17 @@ public class TransactionService {
     @Autowired
     public TransactionService(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
+    }
+
+    public TransactionResponse getTransaction(Long id) {
+        String token = jwtUtils.getToken();
+        String email = jwtUtils.getEmail(token, true);
+
+        TransactionEntity transactionEntity = transactionRepository.findById(id).stream().findFirst().orElseThrow(() -> new TransactionException.TransactionNotFoundException("Transaction with id `" + id + "` not found"));
+        if (!transactionEntity.getSender().equals(email) && !transactionEntity.getReceiver().equals(email))
+            throw new UserException.BadCredentialsException("Unauthorized access to transaction with id `" + id + "`");
+
+        return transactionMapper.toTransactionResponse(transactionEntity);
     }
 
     public List<TransactionResponse> getTransactions(int page, int size, TransactionType filter) {

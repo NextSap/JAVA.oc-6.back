@@ -11,7 +11,7 @@
   ],
   "transactions": [
     {
-      "sender": "sender@test.com",
+      "sender": "test@test.com",
       "receiver": "receiver@test.com",
       "amount": 100,
       "timestamp": 123456789,
@@ -20,19 +20,19 @@
     },
     {
       "sender": "sender@test.com",
-      "receiver": "receiver@test.com",
+      "receiver": "test@test.com",
       "amount": 100,
       "timestamp": 123456789,
       "description": "test transaction",
       "transactionType": "TRANSFER"
     },
     {
-      "sender": "sender@test.com",
-      "receiver": "receiver@test.com",
+      "sender": "test@test.com",
+      "receiver": "PayMyBuddy",
       "amount": 100,
       "timestamp": 123456789,
       "description": "test transaction",
-      "transactionType": "TRANSFER"
+      "transactionType": "DEPOSIT"
     },
     {
       "sender": "sender@test.com",

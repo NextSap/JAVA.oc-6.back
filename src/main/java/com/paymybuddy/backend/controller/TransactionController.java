@@ -26,6 +26,13 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<TransactionResponse> getTransaction(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        TransactionResponse transactionResponse = transactionService.getTransaction(id);
+        logger.info("Successful request GET /transaction/{}", id);
+        return new ResponseEntity<>(transactionResponse, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<TransactionResponse>> getTransactions(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) TransactionType filter, @RequestHeader("Authorization") String token) {
         List<TransactionResponse> transactionResponseList = transactionService.getTransactions(page, size, filter);

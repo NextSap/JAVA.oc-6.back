@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionResponse {
+    private Long id;
     private String sender;
     private String receiver;
     private String description;
