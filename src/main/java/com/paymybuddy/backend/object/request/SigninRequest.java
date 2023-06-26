@@ -6,13 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.util.List;
-
 @Data
 @Builder
 @EqualsAndHashCode
 @ToString
-public class UserRequest {
+public class SigninRequest {
     @NotNull(message = "email:Null") @NotNull(message = "email:Required")
     private String email;
     @NotNull(message = "password:Null") @NotNull(message = "password:Required")
@@ -21,8 +19,4 @@ public class UserRequest {
     private String firstName;
     @NotNull(message = "lastName:Null") @NotNull(message = "lastName:Required")
     private String lastName;
-    @NotNull(message = "contacts:Null") @NotNull(message = "contacts:Required")
-    private List<String> contacts;
-    @NotNull(message = "balance:Required")
-    private Double balance;
 }

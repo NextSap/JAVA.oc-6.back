@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class JWTException {
+public class JwtException {
 
-    private final Logger logger = LogManager.getLogger(JWTException.class);
+    private final Logger logger = LogManager.getLogger(JwtException.class);
 
     @ExceptionHandler(CreatingTokenException.class)
     public ResponseEntity<ErrorResponse> handleJWTTokenException(CreatingTokenException exception) {

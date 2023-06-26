@@ -5,7 +5,7 @@ import com.paymybuddy.backend.object.TransactionType;
 import com.paymybuddy.backend.object.entity.TransactionEntity;
 import com.paymybuddy.backend.object.request.TransactionRequest;
 import com.paymybuddy.backend.repository.TransactionRepository;
-import com.paymybuddy.backend.util.JWTUtils;
+import com.paymybuddy.backend.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @AutoConfigureMockMvc
 public class TransactionServiceTest {
 
-    private final String token = JWTUtils.getInstance().get("sender", true);
+    private final String token = JwtUtils.getInstance().get("sender", true);
     private final TransactionMapper transactionMapper = TransactionMapper.getInstance();
 
     @Mock
@@ -35,7 +35,7 @@ public class TransactionServiceTest {
     @InjectMocks
     private TransactionService transactionService;
     @Mock
-    private JWTUtils jwtUtils = JWTUtils.getInstance();
+    private JwtUtils jwtUtils = JwtUtils.getInstance();
     private TransactionEntity transactionEntity;
     private TransactionRequest transactionRequest;
 
@@ -54,24 +54,24 @@ public class TransactionServiceTest {
         transactionRequest = TransactionRequest.builder()
                 .sender("sender")
                 .receiver("receiver")
-                .amount(BigDecimal.valueOf(1.0))
+                .amount(1.0)
                 .description("description")
                 .build();
 
-        when(jwtUtils.verify(token)).thenReturn("sender");
+        when(jwtUtils.getEmail(token, false)).thenReturn("sender");
         when(transactionRepository.findAll()).thenReturn(List.of(transactionEntity));
         when(transactionRepository.findAll(Pageable.ofSize(1))).thenReturn(new PageImpl<>(List.of(transactionEntity)));
     }
 
     @Test
     public void testGetTransactions() {
-        assertEquals(List.of(transactionMapper.toTransactionResponse(transactionEntity)), transactionService.getTransactions(1, 1, token, TransactionType.TRANSFER));
+        assertEquals(List.of(transactionMapper.toTransactionResponse(transactionEntity)), transactionService.getTransactions(1, 1, TransactionType.TRANSFER));
     }
 
     @Test
     public void testCreateTransaction() {
         when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionEntity);
 
-        assertEquals(transactionMapper.toTransactionResponse(transactionEntity), transactionService.createTransaction(transactionRequest, TransactionType.TRANSFER, token));
+        assertEquals(transactionMapper.toTransactionResponse(transactionEntity), transactionService.createTransaction(transactionRequest, TransactionType.TRANSFER));
     }
 }

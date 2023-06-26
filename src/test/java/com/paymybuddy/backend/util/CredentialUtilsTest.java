@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CredentialUtilsTest {
 
     private final CredentialUtils credentialUtils = CredentialUtils.getInstance();
+
     @Test
     public void testCheck() {
         String password = "test";
