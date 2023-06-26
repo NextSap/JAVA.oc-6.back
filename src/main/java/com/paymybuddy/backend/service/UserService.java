@@ -9,9 +9,9 @@ import com.paymybuddy.backend.object.request.UserRequest;
 import com.paymybuddy.backend.object.response.LoginResponse;
 import com.paymybuddy.backend.object.response.UserResponse;
 import com.paymybuddy.backend.repository.UserRepository;
-import com.paymybuddy.backend.util.CredentialUtils;
 import com.paymybuddy.backend.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,7 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils = JwtUtils.getInstance();
-    private final CredentialUtils credentialUtils = CredentialUtils.getInstance();
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     private final UserMapper userMapper = UserMapper.getInstance();
 
     @Autowired
@@ -33,7 +33,7 @@ public class UserService {
         String email = loginRequest.getEmail();
         UserEntity user = userRepository.findById(email).stream().findFirst().orElseThrow(() -> new UserException.BadCredentialsException("Bad credentials"));
 
-        if (!credentialUtils.check(loginRequest.getPassword(), user.getPassword()))
+        if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
             throw new UserException.BadCredentialsException("Bad credentials");
 
         return LoginResponse.builder().token(jwtUtils.get(email, loginRequest.isRememberMe())).build();
@@ -72,7 +72,7 @@ public class UserService {
         UserEntity userEntity = getUserEntityByEmail(email);
         userEntity.setFirstName(userRequest.getFirstName());
         userEntity.setLastName(userRequest.getLastName());
-        userEntity.setPassword(userEntity.getPassword().equals(userRequest.getPassword()) ? userEntity.getPassword() : credentialUtils.hash(userRequest.getPassword()));
+        userEntity.setPassword(userEntity.getPassword().equals(userRequest.getPassword()) ? userEntity.getPassword() : bCryptPasswordEncoder.encode(userRequest.getPassword()));
         userEntity.setContacts(userRequest.getContacts());
         userEntity.setBalance(BigDecimal.valueOf(userRequest.getBalance()));
 
