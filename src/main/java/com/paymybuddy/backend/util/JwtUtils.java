@@ -17,7 +17,7 @@ public class JwtUtils {
 
     private JwtUtils() {
         algorithm = Algorithm.HMAC256("secret");
-    }
+    } // TODO: Use Vault to store secret
 
     public String get(String email, boolean rememberMe) {
         try {

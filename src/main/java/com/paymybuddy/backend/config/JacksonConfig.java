@@ -2,8 +2,11 @@ package com.paymybuddy.backend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.backend.object.entity.TransactionEntity;
+import com.paymybuddy.backend.object.entity.UserEntity;
 import com.paymybuddy.backend.object.model.TransactionModel;
+import com.paymybuddy.backend.object.model.UserModel;
 import com.paymybuddy.backend.repository.TransactionRepository;
+import com.paymybuddy.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,10 +30,12 @@ public class JacksonConfig implements ApplicationRunner {
     private final ObjectMapper objectMapper;
 
     private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
 
-    public JacksonConfig(ObjectMapper objectMapper, TransactionRepository transactionRepository) {
+    public JacksonConfig(ObjectMapper objectMapper, TransactionRepository transactionRepository, UserRepository userRepository) {
         this.objectMapper = objectMapper;
         this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
     }
 
     @Value("classpath:data.json")
@@ -49,11 +54,14 @@ public class JacksonConfig implements ApplicationRunner {
         Entities entities = map(models);
 
         transactionRepository.saveAll(entities.getTransactions());
+        userRepository.saveAll(entities.getUsers());
+
         logger.info("Database feeded");
     }
 
     public Entities map(Models models) {
         List<TransactionEntity> transactionEntityList = new ArrayList<>();
+        List<UserEntity> userEntityList = new ArrayList<>();
         double fees = 0.005;
 
         for(TransactionModel transactionModel : models.getTransactions()) {
@@ -68,7 +76,17 @@ public class JacksonConfig implements ApplicationRunner {
                     .build());
         }
 
-        return new Entities(transactionEntityList);
+        for (UserModel user : models.users) {
+            userEntityList.add(UserEntity.builder()
+                    .email(user.getEmail())
+                    .password(user.getPassword())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .balance(user.getBalance())
+                    .build());
+        }
+
+        return new Entities(transactionEntityList, userEntityList);
     }
 
 
@@ -77,6 +95,7 @@ public class JacksonConfig implements ApplicationRunner {
     @NoArgsConstructor
     public static class Models {
         private TransactionModel[] transactions;
+        private UserModel[] users;
     }
 
     @Data
@@ -84,5 +103,6 @@ public class JacksonConfig implements ApplicationRunner {
     @NoArgsConstructor
     public static class Entities {
         private List<TransactionEntity> transactions;
+        private List<UserEntity> users;
     }
 }

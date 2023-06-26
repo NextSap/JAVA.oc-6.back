@@ -1,4 +1,14 @@
 {
+  "users": [
+    {
+      "email": "test@test.com",
+      "password": "$2a$10$bRa//G1hY8meV1vupT.4S.1Mmji6jNSO73RaL0WfLttNHZbWH/k1y",
+      "firstName": "Louis",
+      "lastName": "Di Ilio",
+      "balance": 1000,
+      "contact": []
+    }
+  ],
   "transactions": [
     {
       "sender": "sender@test.com",
