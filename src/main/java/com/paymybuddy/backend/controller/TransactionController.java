@@ -1,7 +1,7 @@
 package com.paymybuddy.backend.controller;
 
-import com.paymybuddy.backend.object.TransactionType;
 import com.paymybuddy.backend.object.request.TransactionRequest;
+import com.paymybuddy.backend.object.response.PaginationInfoResponse;
 import com.paymybuddy.backend.object.response.TransactionResponse;
 import com.paymybuddy.backend.service.TransactionService;
 import jakarta.validation.Valid;
@@ -34,15 +34,22 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> getTransactions(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) TransactionType filter, @RequestHeader("Authorization") String token) {
-        List<TransactionResponse> transactionResponseList = transactionService.getTransactions(page, size, filter);
-        logger.info("Successful request GET /transaction?page={}&size={}&filter={}", page, size, filter);
+    public ResponseEntity<List<TransactionResponse>> getTransactions(@RequestParam int page, @RequestParam int size, @RequestHeader("Authorization") String token) {
+        List<TransactionResponse> transactionResponseList = transactionService.getTransactions(page, size);
+        logger.info("Successful request GET /transaction?page={}&size={}", page, size);
         return new ResponseEntity<>(transactionResponseList, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/paginationInfo")
+    public ResponseEntity<PaginationInfoResponse> getPaginationInfo(@RequestParam int size, @RequestHeader("Authorization") String token) {
+        PaginationInfoResponse paginationInfo = transactionService.getPaginationInfo(size);
+        logger.info("Successful request GET /transaction/paginationInfo?size={}", size);
+        return new ResponseEntity<>(paginationInfo, HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<TransactionResponse> postTransaction(@RequestParam TransactionType type, @Valid @RequestBody TransactionRequest transactionRequest, @RequestHeader("Authorization") String token) {
-        TransactionResponse transactionResponse = transactionService.createTransaction(transactionRequest, type);
+    public ResponseEntity<TransactionResponse> postTransaction(@Valid @RequestBody TransactionRequest transactionRequest, @RequestHeader("Authorization") String token) {
+        TransactionResponse transactionResponse = transactionService.createTransaction(transactionRequest);
         logger.info("Successful request POST /transaction");
         return new ResponseEntity<>(transactionResponse, HttpStatus.CREATED);
     }

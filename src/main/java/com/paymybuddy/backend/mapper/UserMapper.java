@@ -29,6 +29,14 @@ public class UserMapper {
                 .build();
     }
 
+    public UserResponse toMinimizedUserResponse(UserEntity userEntity) {
+        return UserResponse.builder()
+                .email(userEntity.getEmail())
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .build();
+    }
+
     public UserEntity toUserEntity(SigninRequest signinRequest, boolean hashPassword) {
         String password = signinRequest.getPassword();
         return UserEntity.builder()

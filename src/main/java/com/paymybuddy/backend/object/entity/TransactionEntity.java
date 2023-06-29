@@ -1,6 +1,5 @@
 package com.paymybuddy.backend.object.entity;
 
-import com.paymybuddy.backend.object.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +22,4 @@ public class TransactionEntity {
     private BigDecimal amount;
     private BigDecimal fees;
     private Long timestamp;
-    private TransactionType transactionType;
 }

@@ -28,7 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         String token = getJwtFromRequest(request);
 
-        String email = JwtUtils.getInstance().getEmail(token, false);
+        String email = JwtUtils.getInstance().getEmail(token, true);
 
         response.setStatus(HttpStatus.BAD_REQUEST.value());
 

@@ -3,14 +3,14 @@ package com.paymybuddy.backend.service;
 import com.paymybuddy.backend.exception.TransactionException;
 import com.paymybuddy.backend.exception.UserException;
 import com.paymybuddy.backend.mapper.TransactionMapper;
-import com.paymybuddy.backend.object.TransactionType;
 import com.paymybuddy.backend.object.entity.TransactionEntity;
+import com.paymybuddy.backend.object.entity.UserEntity;
 import com.paymybuddy.backend.object.request.TransactionRequest;
+import com.paymybuddy.backend.object.response.PaginationInfoResponse;
 import com.paymybuddy.backend.object.response.TransactionResponse;
 import com.paymybuddy.backend.repository.TransactionRepository;
 import com.paymybuddy.backend.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,15 +20,14 @@ import java.util.List;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final UserService userService;
     private final TransactionMapper transactionMapper = TransactionMapper.getInstance();
     private final JwtUtils jwtUtils = JwtUtils.getInstance();
 
-    @Value("${organization}")
-    private String organization;
-
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository, UserService userService) {
         this.transactionRepository = transactionRepository;
+        this.userService = userService;
     }
 
     public TransactionResponse getTransaction(Long id) {
@@ -42,7 +41,7 @@ public class TransactionService {
         return transactionMapper.toTransactionResponse(transactionEntity);
     }
 
-    public List<TransactionResponse> getTransactions(int page, int size, TransactionType filter) {
+    public List<TransactionResponse> getTransactions(int page, int size) {
         String token = jwtUtils.getToken();
         String email = jwtUtils.getEmail(token, true);
 
@@ -50,40 +49,57 @@ public class TransactionService {
             throw new TransactionException.TransactionInvalidPagingException("Page and size must be greater than 0 and lower than 100");
 
         List<TransactionEntity> transactionEntityList = transactionRepository.findAll().stream()
-                .filter(transactionEntity -> (transactionEntity.getSender().equals(email) || transactionEntity.getReceiver().equals(email)) && (filter == null || transactionEntity.getTransactionType().equals(filter)))
+                .filter(transactionEntity -> (transactionEntity.getSender().equals(email) || transactionEntity.getReceiver().equals(email)))
+                .sorted((transactionEntity1, transactionEntity2) -> transactionEntity2.getTimestamp().compareTo(transactionEntity1.getTimestamp()))
                 .skip((long) (page - 1) * size).limit(size).toList();
-
-        if (transactionEntityList.isEmpty())
-            throw new TransactionException.TransactionNotFoundException("No transaction found for user `" + email + "`");
 
         return transactionMapper.toTransactionResponseList(transactionEntityList);
     }
 
-    public TransactionResponse createTransaction(TransactionRequest transactionRequest, TransactionType type) {
+    public TransactionResponse createTransaction(TransactionRequest transactionRequest) {
         String token = jwtUtils.getToken();
         String email = jwtUtils.getEmail(token, true);
+        final double fees = 0.005;
 
         if (BigDecimal.valueOf(transactionRequest.getAmount()).compareTo(BigDecimal.valueOf(0)) <= 0)
             throw new TransactionException.TransactionInvalidAmountException("Transaction amount must be greater than 0");
 
         transactionRequest.setSender(email);
 
-        TransactionEntity transactionEntity = transactionMapper.toTransactionEntity(transactionRequest, type);
+        if (transactionRequest.getSender().equals(transactionRequest.getReceiver()))
+            throw new TransactionException.TransactionInvalidReceiverException("Transaction sender and receiver must be different");
 
-        switch (type) {
-            case DEPOSIT -> {
-                transactionEntity.setReceiver(email);
-                transactionEntity.setSender(organization);
-                transactionEntity.setFees(BigDecimal.valueOf(0));
-            }
-            case WITHDRAWAL -> {
-                transactionEntity.setReceiver(organization);
-                transactionEntity.setSender(email);
-                transactionEntity.setFees(BigDecimal.valueOf(0));
-            }
-            case TRANSFER -> transactionEntity.setSender(email);
-        }
+        UserEntity sender = userService.getUserEntityByEmail(transactionRequest.getSender());
+        UserEntity receiver = userService.getUserEntityByEmail(transactionRequest.getReceiver());
 
-        return transactionMapper.toTransactionResponse(transactionRepository.save(transactionEntity));
+        if (BigDecimal.valueOf(transactionRequest.getAmount()).compareTo(sender.getBalance()) > 0)
+            throw new TransactionException.TransactionInvalidAmountException("Transaction amount must be lower than sender balance");
+
+        BigDecimal amount = BigDecimal.valueOf(transactionRequest.getAmount());
+
+        sender.setBalance(sender.getBalance().subtract(amount));
+        receiver.setBalance(receiver.getBalance().subtract(amount.multiply(BigDecimal.valueOf(1 - fees))));
+
+        userService.updateUser(sender);
+        userService.updateUser(receiver);
+
+        return transactionMapper.toTransactionResponse(transactionRepository.save(transactionMapper.toTransactionEntity(transactionRequest)));
+    }
+
+    public PaginationInfoResponse getPaginationInfo(int size) {
+        String token = jwtUtils.getToken();
+        String email = jwtUtils.getEmail(token, true);
+
+        if (size <= 0 || size > 100)
+            throw new TransactionException.TransactionInvalidPagingException("Page and size must be greater than 0 and lower than 100");
+
+        List<TransactionEntity> transactionEntityList = transactionRepository.findAll().stream()
+                .filter(transactionEntity -> (transactionEntity.getSender().equals(email) || transactionEntity.getReceiver().equals(email)))
+                .toList();
+
+        int totalElements = transactionEntityList.size();
+        double totalPages = (double) totalElements / size;
+
+        return PaginationInfoResponse.builder().totalPages((int) Math.ceil(totalPages)).build();
     }
 }

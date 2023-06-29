@@ -1,6 +1,5 @@
 package com.paymybuddy.backend.object.model;
 
-import com.paymybuddy.backend.object.TransactionType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,5 +17,4 @@ public class TransactionModel {
     private String description;
     private BigDecimal amount;
     private Long timestamp;
-    private TransactionType transactionType;
 }

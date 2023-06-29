@@ -41,6 +41,13 @@ public class TransactionException {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(TransactionInvalidReceiverException.class)
+    public ResponseEntity<ErrorResponse> handleException(TransactionInvalidReceiverException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder().field("Transaction").cause(exception.getMessage()).build();
+        logger.error("Transaction invalid receiver: " + exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     public static class TransactionNotFoundException extends RuntimeException {
         public TransactionNotFoundException(String message) {
             super(message);
@@ -61,6 +68,12 @@ public class TransactionException {
 
     public static class TransactionInvalidPagingException extends RuntimeException {
         public TransactionInvalidPagingException(String message) {
+            super(message);
+        }
+    }
+
+    public static class TransactionInvalidReceiverException extends RuntimeException {
+        public TransactionInvalidReceiverException(String message) {
             super(message);
         }
     }

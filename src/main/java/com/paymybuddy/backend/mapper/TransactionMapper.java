@@ -1,6 +1,5 @@
 package com.paymybuddy.backend.mapper;
 
-import com.paymybuddy.backend.object.TransactionType;
 import com.paymybuddy.backend.object.entity.TransactionEntity;
 import com.paymybuddy.backend.object.request.TransactionRequest;
 import com.paymybuddy.backend.object.response.TransactionResponse;
@@ -25,7 +24,6 @@ public class TransactionMapper {
                 .fees(transactionEntity.getFees())
                 .description(transactionEntity.getDescription())
                 .timestamp(transactionEntity.getTimestamp())
-                .transactionType(transactionEntity.getTransactionType())
                 .build();
     }
 
@@ -33,7 +31,7 @@ public class TransactionMapper {
         return transactionEntityList.stream().map(this::toTransactionResponse).toList();
     }
 
-    public TransactionEntity toTransactionEntity(TransactionRequest transactionRequest, TransactionType transactionType) {
+    public TransactionEntity toTransactionEntity(TransactionRequest transactionRequest) {
         double fees = 0.005;
         return TransactionEntity.builder()
                 .sender(transactionRequest.getSender())
@@ -42,7 +40,6 @@ public class TransactionMapper {
                 .fees(BigDecimal.valueOf(transactionRequest.getAmount()).multiply(BigDecimal.valueOf(fees)))
                 .description(transactionRequest.getDescription())
                 .timestamp(new Date().getTime())
-                .transactionType(transactionType)
                 .build();
     }
 

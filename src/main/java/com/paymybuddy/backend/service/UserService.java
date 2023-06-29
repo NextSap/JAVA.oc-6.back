@@ -43,6 +43,10 @@ public class UserService {
         return userRepository.findById(email).stream().findFirst().orElseThrow(() -> new UserException.UserNotFoundException("User with email `" + email + "` not found"));
     }
 
+    public UserResponse getMinimizedUserResponseByEmail(String email) {
+        return userMapper.toMinimizedUserResponse(getUserEntityByEmail(email));
+    }
+
     public UserResponse getUserResponseByToken() {
         String token = jwtUtils.getToken();
         String email = jwtUtils.getEmail(token, true);
@@ -79,6 +83,10 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(userEntity));
     }
 
+    public UserResponse updateUser(UserEntity userEntity) {
+        return userMapper.toUserResponse(userRepository.save(userEntity));
+    }
+
     public void deleteUser() {
         String token = jwtUtils.getToken();
         String email = jwtUtils.getEmail(token, true);
@@ -87,6 +95,19 @@ public class UserService {
             throw new UserException.UserNotFoundException("User with email `" + email + "` not found");
 
         userRepository.deleteById(email);
+    }
+
+    public UserResponse addContact(String email) {
+        String token = jwtUtils.getToken();
+        String userEmail = jwtUtils.getEmail(token, true);
+
+        if (!emailExists(userEmail))
+            throw new UserException.UserNotFoundException("User with email `" + userEmail + "` not found");
+
+        UserEntity userEntity = getUserEntityByEmail(userEmail);
+        userEntity.getContacts().add(email);
+
+        return userMapper.toUserResponse(userRepository.save(userEntity));
     }
 
     public boolean emailExists(String email) {

@@ -1,7 +1,6 @@
 package com.paymybuddy.backend.service;
 
 import com.paymybuddy.backend.mapper.TransactionMapper;
-import com.paymybuddy.backend.object.TransactionType;
 import com.paymybuddy.backend.object.entity.TransactionEntity;
 import com.paymybuddy.backend.object.request.TransactionRequest;
 import com.paymybuddy.backend.repository.TransactionRepository;
@@ -46,7 +45,6 @@ public class TransactionServiceTest {
                 .sender("sender")
                 .receiver("receiver")
                 .amount(BigDecimal.valueOf(1.0))
-                .transactionType(TransactionType.TRANSFER)
                 .fees(BigDecimal.valueOf(1.0).multiply(BigDecimal.valueOf(0.005)))
                 .description("description")
                 .build();
@@ -65,13 +63,13 @@ public class TransactionServiceTest {
 
     @Test
     public void testGetTransactions() {
-        assertEquals(List.of(transactionMapper.toTransactionResponse(transactionEntity)), transactionService.getTransactions(1, 1, TransactionType.TRANSFER));
+        assertEquals(List.of(transactionMapper.toTransactionResponse(transactionEntity)), transactionService.getTransactions(1, 1));
     }
 
     @Test
     public void testCreateTransaction() {
         when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(transactionEntity);
 
-        assertEquals(transactionMapper.toTransactionResponse(transactionEntity), transactionService.createTransaction(transactionRequest, TransactionType.TRANSFER));
+        assertEquals(transactionMapper.toTransactionResponse(transactionEntity), transactionService.createTransaction(transactionRequest));
     }
 }

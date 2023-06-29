@@ -2,7 +2,6 @@ package com.paymybuddy.backend.object.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.paymybuddy.backend.object.TransactionType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,5 +23,4 @@ public class TransactionResponse {
     private BigDecimal amount;
     private BigDecimal fees;
     private Long timestamp;
-    private TransactionType transactionType;
 }

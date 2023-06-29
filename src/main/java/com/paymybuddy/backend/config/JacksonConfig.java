@@ -72,7 +72,6 @@ public class JacksonConfig implements ApplicationRunner {
                     .fees(transactionModel.getAmount().multiply(BigDecimal.valueOf(fees)))
                     .description(transactionModel.getDescription())
                     .timestamp(transactionModel.getTimestamp())
-                    .transactionType(transactionModel.getTransactionType())
                     .build());
         }
 

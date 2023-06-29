@@ -1,6 +1,5 @@
 package com.paymybuddy.backend.mapper;
 
-import com.paymybuddy.backend.object.TransactionType;
 import com.paymybuddy.backend.object.entity.TransactionEntity;
 import com.paymybuddy.backend.object.request.TransactionRequest;
 import com.paymybuddy.backend.object.response.TransactionResponse;
@@ -33,7 +32,6 @@ public class TransactionMapperTest {
                 .description("description")
                 .timestamp(new Date().getTime())
                 .fees(BigDecimal.valueOf(1.0).multiply(BigDecimal.valueOf(0.005)))
-                .transactionType(TransactionType.TRANSFER)
                 .build();
         
         transactionResponse = TransactionResponse.builder()
@@ -43,7 +41,6 @@ public class TransactionMapperTest {
                 .description("description")
                 .timestamp(new Date().getTime())
                 .fees(BigDecimal.valueOf(1.0).multiply(BigDecimal.valueOf(0.005)))
-                .transactionType(TransactionType.TRANSFER)
                 .build();
         
         transactionRequest = TransactionRequest.builder()
@@ -62,7 +59,7 @@ public class TransactionMapperTest {
     @Test
     public void testToTransactionEntity() {
         transactionEntity.setTimestamp(new Date().getTime());
-        assertEquals(transactionEntity, transactionMapper.toTransactionEntity(transactionRequest, TransactionType.TRANSFER));
+        assertEquals(transactionEntity, transactionMapper.toTransactionEntity(transactionRequest));
     }
 
     @Test
