@@ -25,12 +25,10 @@ public class JwtFilter extends OncePerRequestFilter {
     private final List<String> excludedEndpoints = List.of("/auth", "/docs", "/swagger-ui", "/v3");
 
     @Override
-    protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         String token = getJwtFromRequest(request);
 
-        String email = JwtUtils.getInstance().getEmail(token, true);
-
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        String email = JwtUtils.getInstance().getEmail(token, false);
 
         if (email == null) {
             ObjectMapper objectMapper = new ObjectMapper();
