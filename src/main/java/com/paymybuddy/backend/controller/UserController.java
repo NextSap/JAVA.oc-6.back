@@ -3,6 +3,8 @@ package com.paymybuddy.backend.controller;
 import com.paymybuddy.backend.object.request.UserRequest;
 import com.paymybuddy.backend.object.response.UserResponse;
 import com.paymybuddy.backend.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "User management", description = "User management")
 @RequestMapping(value = "/user")
 public class UserController {
 
@@ -24,35 +27,40 @@ public class UserController {
     }
 
     @GetMapping(value = "/{email}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable String email, @RequestHeader("Authorization") String token) {
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserResponse> getUser(@PathVariable String email) {
         UserResponse userResponse = userService.getMinimizedUserResponseByEmail(email);
         logger.info("Successful request GET /user/{}", email);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> getUser(@RequestHeader("Authorization") String token) {
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserResponse> getUser() {
         UserResponse userResponse = userService.getUserResponseByToken();
         logger.info("Successful request GET /user?email={}", userResponse.getEmail());
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @PostMapping(value = "/add-contact")
-    public ResponseEntity<UserResponse> addContact(@RequestParam String email, @RequestHeader("Authorization") String token) {
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserResponse> addContact(@RequestParam String email) {
         UserResponse userResponse = userService.addContact(email);
         logger.info("Successful request GET /user/add-contact?{}", email);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserRequest userRequest, @RequestHeader("Authorization") String token) {
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserRequest userRequest) {
         UserResponse userResponse = userService.updateUser(userRequest);
         logger.info("Successful request PUT /user");
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @DeleteMapping
-    public void deleteUser(@RequestHeader("Authorization") String token) {
+    @SecurityRequirement(name = "Bearer Authentication")
+    public void deleteUser() {
         userService.deleteUser();
         logger.info("Successful request DELETE /user");
     }

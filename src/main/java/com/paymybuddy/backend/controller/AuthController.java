@@ -5,6 +5,7 @@ import com.paymybuddy.backend.object.request.SigninRequest;
 import com.paymybuddy.backend.object.response.LoginResponse;
 import com.paymybuddy.backend.object.response.UserResponse;
 import com.paymybuddy.backend.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Auth", description = "Authentication and registration")
 @RequestMapping(value = "/auth")
 public class AuthController {
 
