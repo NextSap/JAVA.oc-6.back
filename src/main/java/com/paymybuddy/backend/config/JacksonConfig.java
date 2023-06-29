@@ -46,7 +46,7 @@ public class JacksonConfig implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if(!feedDatabase) return;
+        if (!feedDatabase) return;
         logger.info("Feeding database");
 
         Models models = objectMapper.readValue(data.getInputStream(), Models.class);
@@ -64,7 +64,7 @@ public class JacksonConfig implements ApplicationRunner {
         List<UserEntity> userEntityList = new ArrayList<>();
         double fees = 0.005;
 
-        for(TransactionModel transactionModel : models.getTransactions()) {
+        for (TransactionModel transactionModel : models.getTransactions()) {
             transactionEntityList.add(TransactionEntity.builder()
                     .sender(transactionModel.getSender())
                     .receiver(transactionModel.getReceiver())
@@ -82,6 +82,7 @@ public class JacksonConfig implements ApplicationRunner {
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
                     .balance(user.getBalance())
+                    .contacts(user.getContacts())
                     .build());
         }
 

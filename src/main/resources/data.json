@@ -6,7 +6,7 @@
       "firstName": "Louis",
       "lastName": "Di Ilio",
       "balance": 345,
-      "contact": ["nicolas@test.com"]
+      "contacts": ["marc@test.com"]
     },
     {
       "email": "marc@test.com",
@@ -14,7 +14,7 @@
       "firstName": "Marc",
       "lastName": "Loli",
       "balance": 100,
-      "contact": []
+      "contacts": []
     },
     {
       "email": "nicolas.broucke@audi.de",
@@ -22,7 +22,7 @@
       "firstName": "Nicolas",
       "lastName": "Broucke",
       "balance": 230,
-      "contact": []
+      "contacts": []
     }
   ],
   "transactions": [

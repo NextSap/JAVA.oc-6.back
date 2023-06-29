@@ -17,6 +17,6 @@ public class UserModel {
     private String password;
     private String firstName;
     private String lastName;
-    private List<String> contact;
+    private List<String> contacts;
     private BigDecimal balance;
 }

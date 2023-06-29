@@ -38,9 +38,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/add-contact")
-    public ResponseEntity<UserResponse> addContact(@RequestBody String email, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserResponse> addContact(@RequestParam String email, @RequestHeader("Authorization") String token) {
         UserResponse userResponse = userService.addContact(email);
-        logger.info("Successful request GET /user/add-contact/{}", email);
+        logger.info("Successful request GET /user/add-contact?{}", email);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 

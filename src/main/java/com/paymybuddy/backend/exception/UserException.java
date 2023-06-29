@@ -33,6 +33,12 @@ public class UserException {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(ContactAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleException(ContactAlreadyExistsException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder().field("User").cause(exception.getMessage()).build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
     public static class UserNotFoundException extends RuntimeException {
         public UserNotFoundException(String message) {
             super(message);
@@ -47,6 +53,12 @@ public class UserException {
 
     public static class BadCredentialsException extends RuntimeException {
         public BadCredentialsException(String message) {
+            super(message);
+        }
+    }
+
+    public static class ContactAlreadyExistsException extends RuntimeException {
+        public ContactAlreadyExistsException(String message) {
             super(message);
         }
     }
