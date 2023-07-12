@@ -16,8 +16,12 @@ public class TransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String sender;
-    private String receiver;
+    @ManyToOne
+    @JoinColumn(name = "sender_email", referencedColumnName = "email")
+    private UserEntity sender;
+    @ManyToOne
+    @JoinColumn(name = "receiver_email", referencedColumnName = "email")
+    private UserEntity receiver;
     private String description;
     private BigDecimal amount;
     private BigDecimal fees;

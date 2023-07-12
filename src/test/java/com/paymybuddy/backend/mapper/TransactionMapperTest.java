@@ -1,6 +1,7 @@
 package com.paymybuddy.backend.mapper;
 
 import com.paymybuddy.backend.object.entity.TransactionEntity;
+import com.paymybuddy.backend.object.entity.UserEntity;
 import com.paymybuddy.backend.object.request.TransactionRequest;
 import com.paymybuddy.backend.object.response.TransactionResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,10 +28,10 @@ public class TransactionMapperTest {
 
         transactionEntity = TransactionEntity.builder()
                 .amount(BigDecimal.valueOf(1.0))
-                .sender("sender")
-                .receiver("receiver")
+                .sender(UserEntity.builder().email("sender").build())
+                .receiver(UserEntity.builder().email("receiver").build())
                 .description("description")
-                .timestamp(new Date().getTime())
+                .timestamp(0L)
                 .fees(BigDecimal.valueOf(1.0).multiply(BigDecimal.valueOf(0.005)))
                 .build();
         
@@ -39,7 +40,7 @@ public class TransactionMapperTest {
                 .sender("sender")
                 .receiver("receiver")
                 .description("description")
-                .timestamp(new Date().getTime())
+                .timestamp(0L)
                 .fees(BigDecimal.valueOf(1.0).multiply(BigDecimal.valueOf(0.005)))
                 .build();
         
@@ -59,7 +60,7 @@ public class TransactionMapperTest {
     @Test
     public void testToTransactionEntity() {
         transactionEntity.setTimestamp(new Date().getTime());
-        assertEquals(transactionEntity, transactionMapper.toTransactionEntity(transactionRequest));
+        assertEquals(transactionEntity, transactionMapper.toTransactionEntity(transactionRequest, UserEntity.builder().email("sender").build(), UserEntity.builder().email("receiver").build()));
     }
 
     @Test

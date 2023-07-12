@@ -1,6 +1,7 @@
 package com.paymybuddy.backend.mapper;
 
 import com.paymybuddy.backend.object.entity.TransactionEntity;
+import com.paymybuddy.backend.object.entity.UserEntity;
 import com.paymybuddy.backend.object.request.TransactionRequest;
 import com.paymybuddy.backend.object.response.TransactionResponse;
 
@@ -18,8 +19,8 @@ public class TransactionMapper {
     public TransactionResponse toTransactionResponse(TransactionEntity transactionEntity) {
         return TransactionResponse.builder()
                 .id(transactionEntity.getId())
-                .sender(transactionEntity.getSender())
-                .receiver(transactionEntity.getReceiver())
+                .sender(transactionEntity.getSender().getEmail())
+                .receiver(transactionEntity.getReceiver().getEmail())
                 .amount(transactionEntity.getAmount())
                 .fees(transactionEntity.getFees())
                 .description(transactionEntity.getDescription())
@@ -31,11 +32,11 @@ public class TransactionMapper {
         return transactionEntityList.stream().map(this::toTransactionResponse).toList();
     }
 
-    public TransactionEntity toTransactionEntity(TransactionRequest transactionRequest) {
+    public TransactionEntity toTransactionEntity(TransactionRequest transactionRequest, UserEntity sender, UserEntity receiver) {
         double fees = 0.005;
         return TransactionEntity.builder()
-                .sender(transactionRequest.getSender())
-                .receiver(transactionRequest.getReceiver())
+                .sender(sender)
+                .receiver(receiver)
                 .amount(BigDecimal.valueOf(transactionRequest.getAmount()))
                 .fees(BigDecimal.valueOf(transactionRequest.getAmount()).multiply(BigDecimal.valueOf(fees)))
                 .description(transactionRequest.getDescription())

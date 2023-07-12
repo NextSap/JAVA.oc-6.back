@@ -18,7 +18,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class JacksonConfig implements ApplicationRunner {
         List<UserEntity> userEntityList = new ArrayList<>();
         double fees = 0.005;
 
-        for (TransactionModel transactionModel : models.getTransactions()) {
+       /* for (TransactionModel transactionModel : models.getTransactions()) {
             transactionEntityList.add(TransactionEntity.builder()
                     .sender(transactionModel.getSender())
                     .receiver(transactionModel.getReceiver())
@@ -73,7 +72,7 @@ public class JacksonConfig implements ApplicationRunner {
                     .description(transactionModel.getDescription())
                     .timestamp(transactionModel.getTimestamp())
                     .build());
-        }
+        } */
 
         for (UserModel user : models.users) {
             userEntityList.add(UserEntity.builder()

@@ -35,7 +35,8 @@ public class TransactionService {
         String email = jwtUtils.getEmail(token, true);
 
         TransactionEntity transactionEntity = transactionRepository.findById(id).stream().findFirst().orElseThrow(() -> new TransactionException.TransactionNotFoundException("Transaction with id `" + id + "` not found"));
-        if (!transactionEntity.getSender().equals(email) && !transactionEntity.getReceiver().equals(email))
+
+        if (!transactionEntity.getSender().getEmail().equals(email) && !transactionEntity.getReceiver().getEmail().equals(email))
             throw new UserException.BadCredentialsException("Unauthorized access to transaction with id `" + id + "`");
 
         return transactionMapper.toTransactionResponse(transactionEntity);
@@ -49,7 +50,7 @@ public class TransactionService {
             throw new TransactionException.TransactionInvalidPagingException("Page and size must be greater than 0 and lower than 100");
 
         List<TransactionEntity> transactionEntityList = transactionRepository.findAll().stream()
-                .filter(transactionEntity -> (transactionEntity.getSender().equals(email) || transactionEntity.getReceiver().equals(email)))
+                .filter(transactionEntity -> (transactionEntity.getSender().getEmail().equals(email) || transactionEntity.getReceiver().getEmail().equals(email)))
                 .sorted((transactionEntity1, transactionEntity2) -> transactionEntity2.getTimestamp().compareTo(transactionEntity1.getTimestamp()))
                 .skip((long) (page - 1) * size).limit(size).toList();
 
@@ -78,12 +79,12 @@ public class TransactionService {
         BigDecimal amount = BigDecimal.valueOf(transactionRequest.getAmount());
 
         sender.setBalance(sender.getBalance().subtract(amount));
-        receiver.setBalance(receiver.getBalance().subtract(amount.multiply(BigDecimal.valueOf(1 - fees))));
+        receiver.setBalance(receiver.getBalance().add(amount.multiply(BigDecimal.valueOf(1 - fees))));
 
         userService.updateUser(sender);
         userService.updateUser(receiver);
 
-        return transactionMapper.toTransactionResponse(transactionRepository.save(transactionMapper.toTransactionEntity(transactionRequest)));
+        return transactionMapper.toTransactionResponse(transactionRepository.save(transactionMapper.toTransactionEntity(transactionRequest, sender, receiver)));
     }
 
     public PaginationInfoResponse getPaginationInfo(int size) {
@@ -94,7 +95,7 @@ public class TransactionService {
             throw new TransactionException.TransactionInvalidPagingException("Page and size must be greater than 0 and lower than 100");
 
         List<TransactionEntity> transactionEntityList = transactionRepository.findAll().stream()
-                .filter(transactionEntity -> (transactionEntity.getSender().equals(email) || transactionEntity.getReceiver().equals(email)))
+                .filter(transactionEntity -> (transactionEntity.getSender().getEmail().equals(email) || transactionEntity.getReceiver().getEmail().equals(email)))
                 .toList();
 
         int totalElements = transactionEntityList.size();

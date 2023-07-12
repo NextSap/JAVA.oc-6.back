@@ -109,6 +109,9 @@ public class UserService {
         if(userEntity.getContacts().contains(email))
             throw new UserException.ContactAlreadyExistsException("Contact with email `" + email + "` already exists");
 
+        if(!emailExists(email))
+            throw new UserException.UserNotFoundException("User with email `" + email + "` not found");
+
         userEntity.getContacts().add(email);
 
         return userMapper.toUserResponse(userRepository.save(userEntity));
