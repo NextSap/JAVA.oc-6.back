@@ -1,6 +1,7 @@
 package com.paymybuddy.backend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paymybuddy.backend.Application;
 import com.paymybuddy.backend.object.response.ErrorResponse;
 import com.paymybuddy.backend.util.JwtUtils;
 import jakarta.servlet.FilterChain;
@@ -23,12 +24,13 @@ import java.util.Set;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private final List<String> excludedEndpoints = List.of("/auth", "/docs", "/swagger-ui", "/v3");
+    private final JwtUtils jwtUtils = Application.getJwtUtils();
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         String token = getJwtFromRequest(request);
 
-        String email = JwtUtils.getInstance().getEmail(token, false);
+        String email = jwtUtils.getEmail(token, false);
 
         if (email == null) {
             ObjectMapper objectMapper = new ObjectMapper();

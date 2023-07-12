@@ -1,5 +1,6 @@
 package com.paymybuddy.backend.service;
 
+import com.paymybuddy.backend.Application;
 import com.paymybuddy.backend.exception.UserException;
 import com.paymybuddy.backend.mapper.UserMapper;
 import com.paymybuddy.backend.object.entity.UserEntity;
@@ -20,7 +21,7 @@ import java.math.BigDecimal;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtUtils jwtUtils = JwtUtils.getInstance();
+    private final JwtUtils jwtUtils = Application.getJwtUtils();
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     private final UserMapper userMapper = UserMapper.getInstance();
 

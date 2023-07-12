@@ -1,5 +1,6 @@
 package com.paymybuddy.backend.service;
 
+import com.paymybuddy.backend.Application;
 import com.paymybuddy.backend.exception.TransactionException;
 import com.paymybuddy.backend.exception.UserException;
 import com.paymybuddy.backend.mapper.TransactionMapper;
@@ -22,7 +23,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserService userService;
     private final TransactionMapper transactionMapper = TransactionMapper.getInstance();
-    private final JwtUtils jwtUtils = JwtUtils.getInstance();
+    private final JwtUtils jwtUtils = Application.getJwtUtils();
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository, UserService userService) {

@@ -12,13 +12,12 @@ import java.time.Instant;
 import java.util.Date;
 
 public class JwtUtils {
-    private static final JwtUtils INSTANCE = new JwtUtils();
     private final Logger logger = LogManager.getLogger(JwtUtils.class);
     private final Algorithm algorithm;
 
-    private JwtUtils() {
-        algorithm = Algorithm.HMAC256("secret");
-    } // TODO: Use Vault to store secret
+    public JwtUtils(String secret) {
+        algorithm = Algorithm.HMAC256(secret);
+    }
 
     public String get(String email, boolean rememberMe) {
         try {
@@ -58,9 +57,5 @@ public class JwtUtils {
 
     public String getToken() {
         return SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
-    }
-
-    public static JwtUtils getInstance() {
-        return INSTANCE;
     }
 }
