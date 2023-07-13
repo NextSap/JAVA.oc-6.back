@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
     private final String endpoint = "/user";
+    private final JwtUtils jwtUtils = new JwtUtils("secret");
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -64,7 +65,7 @@ public class UserControllerTest {
     public void testGetUser() throws Exception {
         when(userService.getUserResponseByToken()).thenReturn(userResponse);
 
-        mockMvc.perform(get(endpoint).param("email", "email").header("Authorization", "Bearer " + JwtUtils.getInstance().get("email", false)))
+        mockMvc.perform(get(endpoint).param("email", "email").header("Authorization", "Bearer " + jwtUtils.get("email", false)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(OBJECT_MAPPER.writeValueAsString(userResponse)));
     }
@@ -73,7 +74,7 @@ public class UserControllerTest {
     public void testGetUserByEmail() throws Exception {
         when(userService.getMinimizedUserResponseByEmail("email")).thenReturn(userResponse);
 
-        mockMvc.perform(get(endpoint + "/email").param("email", "email").header("Authorization", "Bearer " + JwtUtils.getInstance().get("email", false)))
+        mockMvc.perform(get(endpoint + "/email").param("email", "email").header("Authorization", "Bearer " + jwtUtils.get("email", false)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(OBJECT_MAPPER.writeValueAsString(userResponse)));
     }
@@ -82,7 +83,7 @@ public class UserControllerTest {
     public void addContact() throws Exception {
         when(userService.addContact("email")).thenReturn(userResponse);
 
-        mockMvc.perform(post(endpoint + "/add-contact").param("email", "email").header("Authorization", "Bearer " + JwtUtils.getInstance().get("email", false)))
+        mockMvc.perform(post(endpoint + "/add-contact").param("email", "email").header("Authorization", "Bearer " + jwtUtils.get("email", false)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(OBJECT_MAPPER.writeValueAsString(userResponse)));
     }
@@ -92,7 +93,7 @@ public class UserControllerTest {
         when(userService.updateUser(any(UserRequest.class))).thenReturn(userResponse);
 
         mockMvc.perform(put(endpoint).contentType(MediaType.APPLICATION_JSON).content(OBJECT_MAPPER.writeValueAsString(userRequest))
-                        .header("Authorization", "Bearer " + JwtUtils.getInstance().get("email", false)))
+                        .header("Authorization", "Bearer " + jwtUtils.get("email", false)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(OBJECT_MAPPER.writeValueAsString(userResponse)));
     }
@@ -100,7 +101,7 @@ public class UserControllerTest {
     @Test
     public void testDeleteUser() throws Exception {
         doNothing().when(userService).deleteUser();
-        mockMvc.perform(delete(endpoint).header("Authorization", "Bearer " + JwtUtils.getInstance().get("email", false)))
+        mockMvc.perform(delete(endpoint).header("Authorization", "Bearer " + jwtUtils.get("email", false)))
                 .andExpect(status().isOk());
     }
 }

@@ -37,7 +37,7 @@ public class TransactionControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final String token = JwtUtils.getInstance().get("email", false);
+    private final String token = new JwtUtils("secret").get("email", false);
 
     @Test
     public void testGetTransaction() throws Exception {

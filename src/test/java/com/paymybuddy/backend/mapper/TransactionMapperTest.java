@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,8 +58,10 @@ public class TransactionMapperTest {
 
     @Test
     public void testToTransactionEntity() {
-        transactionEntity.setTimestamp(new Date().getTime());
-        assertEquals(transactionEntity, transactionMapper.toTransactionEntity(transactionRequest, UserEntity.builder().email("sender").build(), UserEntity.builder().email("receiver").build()));
+        assertEquals(transactionEntity.getSender(), transactionMapper.toTransactionEntity(transactionRequest, UserEntity.builder().email("sender").build(), UserEntity.builder().email("receiver").build()).getSender());
+        assertEquals(transactionEntity.getReceiver(), transactionMapper.toTransactionEntity(transactionRequest, UserEntity.builder().email("sender").build(), UserEntity.builder().email("receiver").build()).getReceiver());
+        assertEquals(transactionEntity.getAmount(), transactionMapper.toTransactionEntity(transactionRequest, UserEntity.builder().email("sender").build(), UserEntity.builder().email("receiver").build()).getAmount());
+        assertEquals(transactionEntity.getDescription(), transactionMapper.toTransactionEntity(transactionRequest, UserEntity.builder().email("sender").build(), UserEntity.builder().email("receiver").build()).getDescription());
     }
 
     @Test

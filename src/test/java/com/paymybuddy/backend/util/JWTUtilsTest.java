@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class JWTUtilsTest {
 
-    private final JwtUtils jwt = JwtUtils.getInstance();
+    private final JwtUtils jwt = new JwtUtils("secret");
     private final String email = "test@test.com";
 
     @Test

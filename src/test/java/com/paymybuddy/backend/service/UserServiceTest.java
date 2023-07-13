@@ -41,7 +41,7 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
     @Mock
-    private JwtUtils jwtUtils = JwtUtils.getInstance();
+    private JwtUtils jwtUtils = new JwtUtils("secret");
 
     private UserEntity userEntity;
 
