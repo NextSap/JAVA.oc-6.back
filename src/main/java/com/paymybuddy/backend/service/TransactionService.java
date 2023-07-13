@@ -1,6 +1,5 @@
 package com.paymybuddy.backend.service;
 
-import com.paymybuddy.backend.Application;
 import com.paymybuddy.backend.exception.TransactionException;
 import com.paymybuddy.backend.exception.UserException;
 import com.paymybuddy.backend.mapper.TransactionMapper;
@@ -23,12 +22,13 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserService userService;
     private final TransactionMapper transactionMapper = TransactionMapper.getInstance();
-    private final JwtUtils jwtUtils = Application.getJwtUtils();
+    private final JwtUtils jwtUtils;
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository, UserService userService) {
+    public TransactionService(TransactionRepository transactionRepository, UserService userService, JwtUtils jwtUtils) {
         this.transactionRepository = transactionRepository;
         this.userService = userService;
+        this.jwtUtils = jwtUtils;
     }
 
     public TransactionResponse getTransaction(Long id) {

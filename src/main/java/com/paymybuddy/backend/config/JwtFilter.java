@@ -1,7 +1,6 @@
 package com.paymybuddy.backend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paymybuddy.backend.Application;
 import com.paymybuddy.backend.object.response.ErrorResponse;
 import com.paymybuddy.backend.util.JwtUtils;
 import jakarta.servlet.FilterChain;
@@ -9,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +24,12 @@ import java.util.Set;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private final List<String> excludedEndpoints = List.of("/auth", "/docs", "/swagger-ui", "/v3");
-    private final JwtUtils jwtUtils = Application.getJwtUtils();
+    private final JwtUtils jwtUtils;
+
+    @Autowired
+    public JwtFilter(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
@@ -55,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
-        var bearerToken = request.getHeader("Authorization");
+        String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

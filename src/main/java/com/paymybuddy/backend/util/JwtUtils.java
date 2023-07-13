@@ -6,17 +6,25 @@ import com.paymybuddy.backend.exception.JwtException;
 import com.paymybuddy.backend.exception.UserException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Date;
 
+@Component
 public class JwtUtils {
     private final Logger logger = LogManager.getLogger(JwtUtils.class);
-    private final Algorithm algorithm;
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    private JwtUtils() {
+    }
 
     public JwtUtils(String secret) {
-        algorithm = Algorithm.HMAC256(secret);
+        this.secret = secret;
     }
 
     public String get(String email, boolean rememberMe) {
@@ -24,7 +32,7 @@ public class JwtUtils {
             logger.debug("Entering getJWTToken with email: {}", email);
 
             String jwtToken = JWT.create().withSubject(email).withIssuedAt(new Date())
-                    .withExpiresAt(Instant.ofEpochSecond(new Date().getTime() + (rememberMe ? 864000000 : 7200000))).sign(algorithm);
+                    .withExpiresAt(Instant.ofEpochSecond(new Date().getTime() + (rememberMe ? 864000000 : 7200000))).sign(Algorithm.HMAC256(secret));
 
             logger.debug("Returning JWT token: {}", jwtToken);
             return jwtToken;
@@ -37,7 +45,7 @@ public class JwtUtils {
         try {
             logger.debug("Entering verifyJWTToken with token: {}", token);
 
-            String email = JWT.require(algorithm).build().verify(token.replace("Bearer ", "")).getSubject();
+            String email = JWT.require(Algorithm.HMAC256(secret)).build().verify(token.replace("Bearer ", "")).getSubject();
 
             logger.debug("Returning email: {}", email);
             return email;
