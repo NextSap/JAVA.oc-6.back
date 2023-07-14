@@ -1,5 +1,6 @@
 package com.paymybuddy.backend.controller;
 
+import com.paymybuddy.backend.object.TransferType;
 import com.paymybuddy.backend.object.request.UserRequest;
 import com.paymybuddy.backend.object.response.UserResponse;
 import com.paymybuddy.backend.service.UserService;
@@ -48,6 +49,14 @@ public class UserController {
         UserResponse userResponse = userService.addContact(email);
         logger.info("Successful request GET /user/add-contact?{}", email);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/transfer-money")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<UserResponse> transferMoney(@RequestParam TransferType transferType, @RequestParam Double amount) {
+        UserResponse userResponse = userService.transferMoney(transferType, amount);
+        logger.info("Successful request POST /user?transferType={}&amount={}", transferType, amount);
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
     @PutMapping

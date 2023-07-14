@@ -1,6 +1,7 @@
 package com.paymybuddy.backend.service;
 
 import com.paymybuddy.backend.mapper.UserMapper;
+import com.paymybuddy.backend.object.TransferType;
 import com.paymybuddy.backend.object.entity.UserEntity;
 import com.paymybuddy.backend.object.request.LoginRequest;
 import com.paymybuddy.backend.object.request.SigninRequest;
@@ -31,9 +32,7 @@ import static org.mockito.Mockito.*;
 @AutoConfigureMockMvc
 public class UserServiceTest {
 
-    private final String token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzZW5kZXIiLCJpYXQiOjE2ODkwNzY5NjIsImV4cCI6MTY4OTk0MDk2MjAxOH0.mnlbgfUssAgTEDVydPON_9ywbDLl6pl38uYcif2lM4g";
-
+    private final String token = new JwtUtils("secret").get("sender", false);
     @Mock
     private Authentication authentication;
     @Mock
@@ -56,13 +55,15 @@ public class UserServiceTest {
                 .email("sender")
                 .contacts(List.of())
                 .balance(BigDecimal.valueOf(100))
-                .password("$2a$10$bRa//G1hY8meV1vupT.4S.1Mmji6jNSO73RaL0WfLttNHZbWH/k1y") // test incoded
+                .password("$2a$10$bRa//G1hY8meV1vupT.4S.1Mmji6jNSO73RaL0WfLttNHZbWH/k1y") // test encoded
                 .build();
 
         when(authentication.getCredentials()).thenReturn(token);
-        when(jwtUtils.get(anyString(), anyBoolean())).thenReturn(token);
-        when(userRepository.findById(anyString())).thenReturn(Optional.of(userEntity));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        when(jwtUtils.getToken()).thenReturn(token);
+        when(jwtUtils.get(anyString(), anyBoolean())).thenReturn(token);
+        when(jwtUtils.getEmail(anyString(), anyBoolean())).thenReturn("sender");
+        when(userRepository.findById(anyString())).thenReturn(Optional.of(userEntity));
     }
 
     @Test
@@ -108,11 +109,17 @@ public class UserServiceTest {
         verify(userRepository, times(1)).deleteById(anyString());
     }
 
- /*   @Test
+    /*@Test
     public void testAddContact() {
 
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        assertEquals(UserMapper.getInstance().toUserResponse(userEntity), userService.addContact("sender"));
+        assertEquals(UserMapper.getInstance().toUserResponse(userEntity), userService.addContact("sender1"));
     } */
+
+    @Test
+    public void testTransferMoney() {
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        assertEquals(0, userEntity.getBalance().subtract(BigDecimal.valueOf(10)).compareTo(userService.transferMoney(TransferType.WITHDRAWAL, 10d).getBalance()));
+    }
 }

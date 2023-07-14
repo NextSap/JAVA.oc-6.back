@@ -1,7 +1,9 @@
 package com.paymybuddy.backend.service;
 
+import com.paymybuddy.backend.exception.TransactionException;
 import com.paymybuddy.backend.exception.UserException;
 import com.paymybuddy.backend.mapper.UserMapper;
+import com.paymybuddy.backend.object.TransferType;
 import com.paymybuddy.backend.object.entity.UserEntity;
 import com.paymybuddy.backend.object.request.LoginRequest;
 import com.paymybuddy.backend.object.request.SigninRequest;
@@ -51,6 +53,7 @@ public class UserService {
     public UserResponse getUserResponseByToken() {
         String token = jwtUtils.getToken();
         String email = jwtUtils.getEmail(token, true);
+        System.out.println(token);
         jwtUtils.verify(token, true);
 
         UserEntity user = userRepository.findById(email).stream().findFirst().orElseThrow(() -> new UserException.UserNotFoundException("User with email `" + email + "` not found"));
@@ -72,7 +75,7 @@ public class UserService {
         String email = jwtUtils.getEmail(token, true);
 
         if (!emailExists(email))
-            throw new UserException.UserNotFoundException("User with email `" + userRequest.getEmail() + "` not found");
+            throw new UserException.UserNotFoundException("User with email `" + email + "` not found");
 
         UserEntity userEntity = getUserEntityByEmail(email);
         userEntity.setFirstName(userRequest.getFirstName());
@@ -120,5 +123,26 @@ public class UserService {
 
     public boolean emailExists(String email) {
         return userRepository.findById(email).stream().findFirst().isPresent();
+    }
+
+    public UserResponse transferMoney(TransferType transferType, Double amount) {
+        String token = jwtUtils.getToken();
+        String email = jwtUtils.getEmail(token, true);
+
+        if (!emailExists(email))
+            throw new UserException.UserNotFoundException("User with email `" + email + "` not found");
+
+        UserEntity userEntity = getUserEntityByEmail(email);
+
+        switch (transferType) {
+            case DEPOSIT -> userEntity.setBalance(userEntity.getBalance().add(BigDecimal.valueOf(amount)));
+            case WITHDRAWAL -> {
+                if (userEntity.getBalance().compareTo(BigDecimal.valueOf(amount)) < 0)
+                    throw new TransactionException.TransactionInvalidAmountException("Insufficient balance");
+                userEntity.setBalance(userEntity.getBalance().subtract(BigDecimal.valueOf(amount)));
+            }
+        }
+
+        return userMapper.toUserResponse(userRepository.save(userEntity));
     }
 }

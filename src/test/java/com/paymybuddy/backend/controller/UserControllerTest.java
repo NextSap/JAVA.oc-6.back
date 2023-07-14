@@ -1,6 +1,7 @@
 package com.paymybuddy.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paymybuddy.backend.object.TransferType;
 import com.paymybuddy.backend.object.request.UserRequest;
 import com.paymybuddy.backend.object.response.UserResponse;
 import com.paymybuddy.backend.service.UserService;
@@ -103,5 +104,14 @@ public class UserControllerTest {
         doNothing().when(userService).deleteUser();
         mockMvc.perform(delete(endpoint).header("Authorization", "Bearer " + jwtUtils.get("email", false)))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testTransferMoney() throws Exception {
+        when(userService.transferMoney(any(TransferType.class), anyDouble())).thenReturn(userResponse);
+        mockMvc.perform(post(endpoint + "/transfer-money").contentType(MediaType.APPLICATION_JSON).param("transferType", "WITHDRAWAL").param("amount", "10.0")
+                        .header("Authorization", "Bearer " + jwtUtils.get("email", false)))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(OBJECT_MAPPER.writeValueAsString(userResponse)));
     }
 }

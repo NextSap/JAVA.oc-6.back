@@ -42,6 +42,7 @@ public class JwtUtils {
     }
 
     public String getEmail(String token, boolean throwException) {
+        System.out.println(token);
         try {
             logger.debug("Entering verifyJWTToken with token: {}", token);
 
