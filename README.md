@@ -1,5 +1,7 @@
 ![Logo.png](.readme%2FLogo.png)
 
+<a target="_blank" href="https://github.com/NextSap/java.oc-6.front">FRONTEND</a> | BACKEND
+
 # PayMyBuddy
 PayMyBuddy est une application web de transfert d'argent.
 
@@ -13,36 +15,33 @@ de test.
 * Installer <a target="_blank" href="https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html">Java
   17+</a>
 * Installer <a target="_blank" href="https://maven.apache.org/download.cgi">Maven 3.8.1+</a>
-* Installer <a target="_blank" href="https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-install#install-vault">Vault 1.14.0+</a>
-* Installer <a target="_blank" href="https://dev.mysql.com/downloads/mysql/">MySQL 8.0.33+</a>
+* Installer <a target="_blank" href="https://docs.docker.com/get-docker/">Docker</a>
+  et <a target="_blank" href="https://docs.docker.com/compose/install/">Docker Compose</a>
 
-### Démarrage
-
-1. Lancer MySQL et lancer le fichier `database.sql` pour initialiser la base de données.
-
-
-2. Démarrage du serveur Vault :
+### <p id="starting">Démarrage</p>
+Démarrage de l'outil de gestion du projet (<a href="https://github.com/NextSap/ProjectManager/tree/java.oc-6">voir les sources</a>) :
 
 ```bash
-vault server -dev --dev-root-token-id="00000000-0000-0000-0000-000000000000"
+java -jar manager.jar
 ```
+Grâce à cet outil, vous pouvez :
+- Créer, lancer, éteindre et supprimer les containers Docker de l'application
+- Gérer les secrets de l'application de manière sécurisée
+- Générer et lancer la documentation Swagger de l'API
+- Lancer les tests unitaires
+- Générer les rapports Jacoco / Surefire
 
-3. Ajout des secrets :
+⚠️ Pour lancer le frontend, veuillez vous référer à la documentation du <a target="_blank" href="https://github.com/NextSap/java.oc-6.front">projet frontend</a>.
 
-```bash
-vault kv put secret/paymybuddy secretKey="secretValue"
+## Documentation
+
+### Swagger
+
+cf. <a href="#starting">Démarrage</a>
+
+### Postman
+
+Vous pouvez également importer la collection Postman qui correspond à cette API afin d'effectuer les requêtes pour facilement (cf. <a target="_blank" href="https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman">Postman - Importing data into Postman</a>)
 ```
-**⚠️ Secrets requis :**
+cd .postman/
 ```
-- jwt.secret
-- spring.datasource.username
-- spring.datasource.password
-```
-
-4. Démarrage du backend :
-
-```bash
-mvn spring-boot:run
-```
-
-5. Démarrage du <a href="https://github.com/NextSap/JAVA.oc-6.front">frontend<a/>

@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+  paymybuddy-service:
+    build: .
+    container_name: paymybuddy-service
+    image: paymybuddy-service
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_HOST: paymybuddy-db
+      MYSQL_PORT: 3306
+      VAULT_HOST: paymybuddy-vault
+    depends_on:
+      - paymybuddy-db
+      - paymybuddy-vault
+
+  paymybuddy-vault:
+    image: "hashicorp/vault:latest"
+    restart: on-failure
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: '00000000-0000-0000-0000-000000000000'
+      VAULT_DEV_LISTEN_ADDRESS: '0.0.0.0:8200'
+      VAULT_ADDR: 'http://0.0.0.0:8200'
+    cap_add:
+      - IPC_LOCK
+    container_name: paymybuddy-vault
+
+  paymybuddy-db:
+    image: "mysql:latest"
+    container_name: paymybuddy-db
+    restart: on-failure
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: paymybuddy
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+    depends_on:
+      - paymybuddy-vault
