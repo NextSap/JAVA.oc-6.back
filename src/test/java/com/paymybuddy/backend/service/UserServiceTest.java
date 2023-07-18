@@ -20,7 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +53,7 @@ public class UserServiceTest {
                 .firstName("Foo")
                 .lastName("Bar")
                 .email("sender")
-                .contacts(List.of())
+                .contacts(new ArrayList<>())
                 .balance(BigDecimal.valueOf(100))
                 .password("$2a$10$bRa//G1hY8meV1vupT.4S.1Mmji6jNSO73RaL0WfLttNHZbWH/k1y") // test encoded
                 .build();
@@ -109,13 +109,12 @@ public class UserServiceTest {
         verify(userRepository, times(1)).deleteById(anyString());
     }
 
-    /*@Test
+    @Test
     public void testAddContact() {
-
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
         assertEquals(UserMapper.getInstance().toUserResponse(userEntity), userService.addContact("sender1"));
-    } */
+    }
 
     @Test
     public void testTransferMoney() {
