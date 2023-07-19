@@ -12,12 +12,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class JacksonConfig implements ApplicationRunner {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
 
+    @Autowired
     public JacksonConfig(ObjectMapper objectMapper, TransactionRepository transactionRepository, UserRepository userRepository) {
         this.objectMapper = objectMapper;
         this.transactionRepository = transactionRepository;
@@ -63,17 +66,6 @@ public class JacksonConfig implements ApplicationRunner {
         List<UserEntity> userEntityList = new ArrayList<>();
         double fees = 0.005;
 
-       /* for (TransactionModel transactionModel : models.getTransactions()) {
-            transactionEntityList.add(TransactionEntity.builder()
-                    .sender(transactionModel.getSender())
-                    .receiver(transactionModel.getReceiver())
-                    .amount(transactionModel.getAmount())
-                    .fees(transactionModel.getAmount().multiply(BigDecimal.valueOf(fees)))
-                    .description(transactionModel.getDescription())
-                    .timestamp(transactionModel.getTimestamp())
-                    .build());
-        } */
-
         for (UserModel user : models.users) {
             userEntityList.add(UserEntity.builder()
                     .email(user.getEmail())
@@ -82,6 +74,17 @@ public class JacksonConfig implements ApplicationRunner {
                     .lastName(user.getLastName())
                     .balance(user.getBalance())
                     .contacts(user.getContacts())
+                    .build());
+        }
+
+        for (TransactionModel transactionModel : models.getTransactions()) {
+            transactionEntityList.add(TransactionEntity.builder()
+                    .sender(userEntityList.stream().filter(user -> user.getEmail().equals(transactionModel.getSender())).findFirst().get())
+                    .receiver(userEntityList.stream().filter(user -> user.getEmail().equals(transactionModel.getReceiver())).findFirst().get())
+                    .amount(transactionModel.getAmount())
+                    .fees(transactionModel.getAmount().multiply(BigDecimal.valueOf(fees)))
+                    .description(transactionModel.getDescription())
+                    .timestamp(transactionModel.getTimestamp())
                     .build());
         }
 

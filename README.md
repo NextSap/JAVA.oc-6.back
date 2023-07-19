@@ -1,6 +1,6 @@
 ![Logo.png](.readme%2FLogo.png)
 
-<a target="_blank" href="https://github.com/NextSap/java.oc-6.front">FRONTEND</a> | BACKEND
+BACKEND | <a target="_blank" href="https://github.com/NextSap/java.oc-6.front">FRONTEND</a>
 
 # PayMyBuddy
 PayMyBuddy est une application web de transfert d'argent.
@@ -22,16 +22,19 @@ de test.
 Démarrage de l'outil de gestion du projet (<a href="https://github.com/NextSap/ProjectManager/tree/java.oc-6">voir les sources</a>) :
 
 ```bash
-java -jar manager.jar
+java -jar Manager.jar true # true indique au programme que vous utilisez une machine Windows, ne mettez aucun argument si vous utilisez une machine MacOS ou Linux
 ```
 Grâce à cet outil, vous pouvez :
 - Créer, lancer, éteindre et supprimer les containers Docker de l'application
 - Gérer les secrets de l'application de manière sécurisée
 - Générer et lancer la documentation Swagger de l'API
-- Lancer les tests unitaires
-- Générer les rapports Jacoco / Surefire
 
-⚠️ Pour lancer le frontend, veuillez vous référer à la documentation du <a target="_blank" href="https://github.com/NextSap/java.oc-6.front">projet frontend</a>.
+Lancement du frontend :  
+```bash
+cd JAVA.oc-6.front
+npm install
+npm run dev
+```
 
 ## Documentation
 

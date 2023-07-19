@@ -6,7 +6,9 @@
       "firstName": "Louis",
       "lastName": "Di Ilio",
       "balance": 345,
-      "contacts": ["marc@test.com"]
+      "contacts": [
+        "marc@test.com"
+      ]
     },
     {
       "email": "marc@test.com",
