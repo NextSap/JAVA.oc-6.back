@@ -14,7 +14,6 @@ de test.
 
 * Installer <a target="_blank" href="https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html">Java
   17+</a>
-* Installer <a target="_blank" href="https://maven.apache.org/download.cgi">Maven 3.8.1+</a>
 * Installer <a target="_blank" href="https://docs.docker.com/get-docker/">Docker</a>
   et <a target="_blank" href="https://docs.docker.com/compose/install/">Docker Compose</a>
 
