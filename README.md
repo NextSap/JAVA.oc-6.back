@@ -41,9 +41,12 @@ npm run dev
 
 cf. <a href="#starting">Démarrage</a>
 
-### Postman
+## Schémas
 
-Vous pouvez également importer la collection Postman qui correspond à cette API afin d'effectuer les requêtes pour facilement (cf. <a target="_blank" href="https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman">Postman - Importing data into Postman</a>)
-```
-cd .postman/
-```
+### Diagramme de classe
+
+![UML.png](.readme%2FUML.png)
+
+### Modèle physique de données
+
+![MPD.png](.readme%2FMPD.png)
