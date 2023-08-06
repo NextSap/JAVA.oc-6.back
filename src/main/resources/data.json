@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "email": "louis@test.com",
+      "password": "$2a$10$bRa//G1hY8meV1vupT.4S.1Mmji6jNSO73RaL0WfLttNHZbWH/k1y",
+      "firstName": "Louis",
+      "lastName": "Di Ilio",
+      "balance": 345,
+      "contacts": [
+        "marc@test.com"
+      ]
+    },
+    {
+      "email": "marc@test.com",
+      "password": "$2a$10$bRa//G1hY8meV1vupT.4S.1Mmji6jNSO73RaL0WfLttNHZbWH/k1y",
+      "firstName": "Marc",
+      "lastName": "Loli",
+      "balance": 100,
+      "contacts": []
+    },
+    {
+      "email": "nicolas.broucke@audi.de",
+      "password": "$2a$10$bRa//G1hY8meV1vupT.4S.1Mmji6jNSO73RaL0WfLttNHZbWH/k1y",
+      "firstName": "Nicolas",
+      "lastName": "Broucke",
+      "balance": 230,
+      "contacts": []
+    }
+  ],
+  "transactions": [
+    {
+      "sender": "louis@test.com",
+      "receiver": "nicolas.broucke@audi.de",
+      "amount": 30,
+      "timestamp": 1675119670000,
+      "description": "Birthday present"
+    },
+    {
+      "sender": "marc@test.com",
+      "receiver": "louis@test.com",
+      "amount": 185.50,
+      "timestamp": 1683990105000,
+      "description": "Ref payment"
+    },
+    {
+      "sender": "louis@test.com",
+      "receiver": "marc@test.com",
+      "amount": 49.99,
+      "timestamp": 1685961023000,
+      "description": "Food ticket refund"
+    },
+    {
+      "sender": "nicolas.broucke@audi.de",
+      "receiver": "marc@test.com",
+      "amount": 13.50,
+      "timestamp": 1686212159000,
+      "description": "T-shirt"
+    },
+    {
+      "sender": "louis@test.com",
+      "receiver": "nicolas.broucke@audi.de",
+      "amount": 6.50,
+      "timestamp": 1686340390000,
+      "description": "This is a long description for a transaction"
+    }
+  ]
+}
