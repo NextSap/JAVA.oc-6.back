@@ -22,7 +22,7 @@ public class UserRequest {
     private String firstName;
     @NotNull(message = "lastName:Null") @NotBlank(message = "lastName:Required")
     private String lastName;
-    @NotNull(message = "contacts:Null") @NotBlank(message = "contacts:Required")
+    @NotNull(message = "contacts:Null")
     private List<String> contacts;
     @NotNull(message = "balance:Required")
     private Double balance;
